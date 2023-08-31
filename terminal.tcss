@@ -1,5 +1,33 @@
-Terminal {
-    width: 80%;
-    height: 80%;
-    background: gray;        
+TerminalScreen {
+    align: center middle;
+    background: black 50%;
+}
+
+TerminalForm {
+    width: 90%;
+    height: 90%;
+}
+
+Log {
+    background: black;
+    color: lime;
+    border: round white;      
+    min-height: 20;
+    min-width: 80; 
+}
+
+TerminalButtons {
+    align: center middle;
+    # min-height: 10;
+    max-height: 4;
+    background: lightgray;
+    border-top: double;    
+    # dock: bottom;
+}
+
+TerminalButtons Button {
+    max-width: 20;
+    # height: 6;
+    outline: solid yellowgreen;
+    margin: 0 1 0 1;
 }
