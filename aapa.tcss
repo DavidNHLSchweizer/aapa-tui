@@ -1,0 +1,47 @@
+AapaConfiguration {
+    height: 14;
+    background: wheat;
+    margin: 1;
+    border: round purple;
+}
+
+AapaConfiguration LabeledInput {
+    margin: 0 0 0 1;
+}
+
+
+LabeledInput Label {
+    color: black;
+}
+AapaButtons {
+    align: center middle;
+    max-height: 4;
+    # background: lightgray;
+    background: wheat;
+    border-top: double purple;    
+}
+
+AapaConfiguration .small {
+    margin: 1;
+}
+.small {
+    color: blue;
+    background: darkgoldenrod;
+    max-width: 5;
+}
+
+AapaButtons Button {
+    max-width: 20;
+    outline: solid blue;
+    margin: 0 1 0 1;
+}
+
+AapaButtons Checkbox {
+    outline: solid gray;
+    color: black; 
+    # background: lightgray;   
+}
+
+# AapaButtons Checkbox ToggleButton {
+#     background: gray;
+# }
