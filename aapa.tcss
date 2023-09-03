@@ -9,9 +9,27 @@ AapaConfiguration LabeledInput {
     margin: 0 0 0 1;
 }
 
-
 LabeledInput Label {
     color: black;
+}
+
+LabeledInput Input:focus {
+    outline: double black;
+}
+
+LabeledInput Input {
+    outline: solid black;
+}
+
+Tooltip {
+    color: black 90%;
+    background: wheat 90%;
+    border: solid purple;
+    # width: 100;
+}
+
+LabelInput Tooltip {
+    width: 100;
 }
 AapaButtons {
     align: center middle;
@@ -36,12 +54,26 @@ AapaButtons Button {
     margin: 0 1 0 1;
 }
 
-AapaButtons Checkbox {
-    outline: solid gray;
-    color: black; 
-    # background: lightgray;   
-}
+# AapaButtons Checkbox {
+#     outline: solid gray;
+#     color: black; 
+#     # background: lightgray;   
+# }
 
 # AapaButtons Checkbox ToggleButton {
 #     background: gray;
 # }
+
+AapaButtons Label {
+    margin: 1 0 0 2;
+    color: black; 
+}
+AapaButtons RadioSet {
+    outline: solid purple;    
+}
+
+AapaButtons RadioButton {
+    color: black; 
+}
+
+

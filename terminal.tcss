@@ -16,6 +16,10 @@ Log {
     min-width: 80; 
 }
 
+# LabeledInput Input{
+#     outline: solid green;
+# }
+
 TerminalButtons {
     align: center middle;
     max-height: 4;

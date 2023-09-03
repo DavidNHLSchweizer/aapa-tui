@@ -1,5 +1,6 @@
 from textual.app import ComposeResult
 from textual.widgets import Static, Label, Input
+import logging
 
 class LabeledInput(Static):
     def __init__(self, label_text, horizontal=False, width=None, **kwdargs):
@@ -7,7 +8,13 @@ class LabeledInput(Static):
         self._horizontal = horizontal
         self._width = width
         self._validators = kwdargs.pop('validators', None)
+        self._input_tooltip = kwdargs.pop('tooltip', None) #note: _tooltip interferes with Textual _tooltip attribute
         super().__init__('', **kwdargs)
+    def compose(self)->ComposeResult:
+        yield Label(self._label_text, id=self._label_id())
+        yield Input('', id=self._input_id(), validators=self._validators) 
+
+
     def _label_id(self)->str:
         return f'{self.id}-label'
     def _input_id(self)->str:
@@ -15,6 +22,7 @@ class LabeledInput(Static):
     def on_mount(self):
         self.styles.width = self._width
         self.horizontal = self._horizontal
+        self.input.tooltip = self._input_tooltip
     @property
     def input(self)->Input:
         return self.query_one(f'#{self._input_id()}', Input)
@@ -38,10 +46,6 @@ class LabeledInput(Static):
             self.label.styles.margin=(0,0,0,0)
             self.input.styles.width = '100w'
             self.input.styles.max_width = self._width
-
-    def compose(self)->ComposeResult:
-        yield Label(self._label_text, id=self._label_id())
-        yield Input('', id=self._input_id(), validators=self._validators) 
 
 if __name__ == "__main__":
     import logging
