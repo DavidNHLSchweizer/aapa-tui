@@ -113,7 +113,7 @@ class AapaButtons(Static):
     @preview.setter
     def preview(self, value: bool):
         buttons = self.query(RadioButton)
-        if value:
+        if value: #note: this is the only way it works properly
             buttons[0].value = True
         else:
             buttons[1].value = True
