@@ -1,3 +1,5 @@
+$BARBIE: rgb(224,33,138); /* e0218a */
+
 AapaConfiguration {
     height: 14;
     background: wheat;
@@ -25,7 +27,6 @@ Tooltip {
     color: black 90%;
     background: wheat 90%;
     border: solid purple;
-    # width: 100;
 }
 
 LabelInput Tooltip {
@@ -34,18 +35,13 @@ LabelInput Tooltip {
 AapaButtons {
     align: center middle;
     max-height: 4;
-    # background: lightgray;
     background: wheat;
     border-top: double purple;    
 }
 
 AapaConfiguration .small {
-    margin: 1;
-}
-.small {
     color: blue;
     background: darkgoldenrod;
-    max-width: 5;
 }
 
 AapaButtons Button {
@@ -54,20 +50,11 @@ AapaButtons Button {
     margin: 0 1 0 1;
 }
 
-# AapaButtons Checkbox {
-#     outline: solid gray;
-#     color: black; 
-#     # background: lightgray;   
-# }
-
-# AapaButtons Checkbox ToggleButton {
-#     background: gray;
-# }
-
 AapaButtons Label {
     margin: 1 0 0 2;
     color: black; 
 }
+
 AapaButtons RadioSet {
     outline: solid purple;    
 }

@@ -160,10 +160,6 @@ class AapaApp(App):
             case 'scan': await self.action_scan()
             case 'mail': await self.action_mail()
         message.stop()
-    # def on_key(self, event: events.Key) -> None:
-    #     """Write Key events to log."""
-    #     if self.terminal_active:
-    #         self.terminal.write('\n'+ str(event))
     async def action_scan(self):    
         params = self.params
         logging.debug(f'{params=}')
