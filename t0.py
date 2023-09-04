@@ -3,7 +3,7 @@ from datetime import datetime
 from textual import events
 from textual.app import App, ComposeResult
 from textual.binding import Binding
-from textual.widgets import Header, Footer, Static, Button, RadioSet, RadioButton
+from textual.widgets import Header, Footer, Static, Button, RadioSet, RadioButton, Input
 from textual.containers import Horizontal, Vertical
 from labeled_input import LabeledInput
 from required import Required
@@ -43,16 +43,18 @@ class AapaConfiguration(Static):
     def compose(self)->ComposeResult:
         with Vertical():
             with Horizontal():
-                yield LabeledInput('Root directory', width = '100', id='root', validators=Required(), tooltip=ToolTips['root'])
+                yield LabeledInput('Root directory', id='root', validators=Required())#, tooltip=ToolTips['root'])
                 yield Button('...', id='edit_root', classes='small')
             with Horizontal():
-                yield LabeledInput('Forms directory', width = '100', id='forms', validators=Required(), tooltip=ToolTips['forms'])
+                yield LabeledInput('Forms directory', id='forms', validators=Required())#, tooltip=ToolTips['forms'])
                 yield Button('...', id='edit_forms', classes='small')
             with Horizontal():
-                yield LabeledInput('Database', width = '100', id='database', validators=Required(), tooltip=ToolTips['database'])
+                yield LabeledInput('Database', id='database', validators=Required())#, tooltip=ToolTips['database'])
                 yield Button('...', id='edit_database', classes='small')                
     def on_mount(self):
         self.border_title = 'AAPA Configuratie'
+        for id in ['root', 'forms', 'database']:
+            self.query_one(f'#{id}', LabeledInput).input.tooltip = ToolTips[id]
         for id in ['edit_root', 'edit_forms', 'edit_database']:
             self.query_one(f'#{id}', Button).tooltip = ToolTips[id]
     def _select_directory(self, input_id: str, title: str):
