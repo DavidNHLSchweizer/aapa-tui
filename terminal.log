@@ -1,1 +1,4 @@
 proactor_events-__init__-633: Using proactor: IocpProactor
+aapa_app-on_button_pressed-159: button scan
+aapa_app-action_scan-166: params=AapaTuiParams(root_directory='C:/repos/aapa/demo', forms_directory='C:/repos/aapa/demo/forms', database='demo.db', preview=True)
+proactor_events-__init__-633: Using proactor: IocpProactor

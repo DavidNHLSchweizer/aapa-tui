@@ -11,15 +11,15 @@ AapaConfiguration LabeledInput {
     margin: 0 0 0 1;
 }
 
-LabeledInput Label {
+AapaConfiguration LabeledInput Label {
     color: black;
 }
 
-LabeledInput Input:focus {
+AapaConfiguration LabeledInput Input:focus {
     outline: double black;
 }
 
-LabeledInput Input {
+AapaConfiguration LabeledInput Input {
     outline: solid black;
 }
 

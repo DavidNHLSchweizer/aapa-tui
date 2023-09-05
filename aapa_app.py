@@ -5,20 +5,20 @@ from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.widgets import Header, Footer, Static, Button, RadioSet, RadioButton
 from textual.containers import Horizontal, Vertical
-from config import config
-from labeled_input import LabeledInput
-from required import Required
-from terminal import TerminalScreen, TerminalWrite
+from common.button_bar import ButtonBar, ButtonDef
+from general.config import config
+from common.labeled_input import LabeledInput
+from common.required import Required
+from common.terminal import TerminalScreen, console_print, init_console, show_console
 import logging
 import tkinter.filedialog as tkifd
 
-global_terminal: TerminalScreen = None
+# global_terminal: TerminalScreen = None
 def testscript(**kwdargs)->bool:
-    global_terminal.post_message(TerminalWrite(f'params {kwdargs}'))   
+    console_print(f'params {kwdargs}')
     for i in range(1,kwdargs.pop('N')):
         if i % 300 == 0:
-            global_terminal.post_message(TerminalWrite(f'dit is {i}'))            
-            logging.debug(f'dit is {i}')
+            console_print(f'dit is {i}')          
     return False
 
 ToolTips = {'root': 'De directory waarbinnen gezocht wordt naar (nieuwe) aanvragen',
@@ -93,12 +93,19 @@ class AapaConfiguration(Static):
         self.query_one('#database', LabeledInput).input.value = value.database
         
 class AapaButtons(Static):
+    DEFAULT_CSS = """
+    AapaButtons ButtonBar {
+        width: 40;
+        margin: 0 2 0 2;
+    }
+    """
     def compose(self)->ComposeResult:
         with Horizontal():
-            yield Button('Scan', variant= 'primary', id='scan')
-            yield Button('Mail', variant ='primary', id='mail') 
+            yield ButtonBar([ButtonDef('Scan', variant= 'primary', id='scan'),
+                             ButtonDef('Mail', variant= 'primary', id='mail')]) 
             yield RadioSet('preview', 'uitvoeren', id='preview')
     def on_mount(self):
+        self.query_one(ButtonBar).styles.width = 36
         radio = self.query_one(RadioSet)
         radio.styles.layout = 'horizontal'
         self.query_one('#scan', Button).tooltip = ToolTips['scan']
@@ -121,6 +128,7 @@ class AapaButtons(Static):
   
 class AapaApp(App):
     BINDINGS = [ 
+                Binding('ctrl-c', 'einde', 'Einde programma', priority=True),
                 Binding('ctrl+s', 'scan', 'Scan nieuwe aanvragen', priority = True),
                 Binding('ctrl+m', 'mail', 'Zet mails klaar', priority = True),         
                 Binding('ctrl+p', 'toggle_preview', 'Toggle preview mode', priority=True),
@@ -129,7 +137,7 @@ class AapaApp(App):
                 Binding('ctrl+d', 'edit_database', 'Kies database file', priority = True, show=False),
                 Binding('ctrl+q', 'barbie', '', priority = True, show=False),
                ]
-    CSS_PATH = ['terminal.tcss', 'aapa.tcss']
+    CSS_PATH = ['aapa.tcss']
     def __init__(self, **kwdargs):
         self.terminal_active = False
         super().__init__(**kwdargs)
@@ -145,19 +153,8 @@ class AapaApp(App):
             global global_terminal 
             global_terminal = self._terminal
         return self._terminal
-    def on_mount(self):
-        self.install_screen(TerminalScreen(), name='terminal')
-    def callback_run_terminal(self, result: bool):
-        logging.debug(f'callbacky {result}')
-        self.terminal_active = False    
-    async def activate_terminal(self)->bool:
-        logging.debug(f'activate run terminal {self.terminal_active}')
-        if self.terminal_active:
-            return False
-        await self.app.push_screen('terminal', self.callback_run_terminal)
-        self.terminal_active = True
-        self.terminal.clear()
-        return True
+    async def on_mount(self):
+        await init_console(self)
     async def on_button_pressed(self, message: Button.Pressed):
         logging.debug(f'button {message.button.id}')
         match message.button.id:
@@ -167,12 +164,12 @@ class AapaApp(App):
     async def action_scan(self):    
         params = self.params
         logging.debug(f'{params=}')
-        if await self.activate_terminal():
+        if await show_console():
             self.terminal.write(f'INITIALIZE SCAN {datetime.strftime(datetime.now(), "%d-%m-%Y, %H:%M:%S")}')
             self.terminal.run(testscript, N=5000, params=params)                
     async def action_mail(self):
         params = self.params
-        if await self.activate_terminal():
+        if await show_console():
             self.terminal.write(f'INITIALIZE MAIL {datetime.strftime(datetime.now(), "%d-%m-%Y, %H:%M:%S")}')
             self.terminal.run(testscript, N=5000, params=params)                
     @property 
@@ -192,6 +189,8 @@ class AapaApp(App):
         self.query_one(AapaConfiguration).edit_forms()
     def action_edit_database(self):
         self.query_one(AapaConfiguration).edit_database()
+    def action_einde(self):
+        self.exit()
     def action_barbie(self):
         BARBIE = '#e0218a'
         for widget in self.query():

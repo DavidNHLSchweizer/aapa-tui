@@ -106,6 +106,12 @@ class LabeledInput(Static):
     def input(self)->Input | InputWithButton:
         return self.query_one(f'#{self._input_id()}')
     @property
+    def value(self)->str:
+        return self.input.value
+    @value.setter
+    def value(self, value: str):
+        self.input.value = value
+    @property
     def label(self)->Label:
         return self.query_one(f'#{self._label_id()}', Label)
     @property
@@ -123,7 +129,6 @@ if __name__ == "__main__":
     class TestApp(App):
         BINDINGS = [
                     ('t', 'toggle_', 'Toggle horizontal'),
-                    # Binding('alt+w', 'width_', 'width truuk', priority=True)
                     ]  
         def compose(self) -> ComposeResult:
             yield InputWithButton(width=80, validators=Required())

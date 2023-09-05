@@ -3,9 +3,8 @@ from datetime import datetime
 from textual import events
 from textual.app import App, ComposeResult
 from textual.binding import Binding
-from textual.widgets import Header, Footer, Static, Button, RadioSet, RadioButton
+from textual.widgets import Header, Footer, Static, Button, RadioSet, RadioButton, Input
 from textual.containers import Horizontal, Vertical
-from config import config
 from labeled_input import LabeledInput
 from required import Required
 from terminal import TerminalScreen, TerminalWrite
@@ -32,6 +31,7 @@ ToolTips = {'root': 'De directory waarbinnen gezocht wordt naar (nieuwe) aanvrag
             'preview_preview': 'Laat verloop van de acties zien; Geen wijzigingen in bestanden of database',
             'preview_uitvoeren': 'Voer acties uit. Wijzigingen in bestanden en database, kan niet worden teruggedraaid'
             }
+
 @dataclass
 class AapaTuiParams:
     root_directory: str = ''
@@ -51,11 +51,6 @@ class AapaConfiguration(Static):
             self.query_one(f'#{id}', LabeledInput).input.tooltip = ToolTips[id]
         for id in ['root-input-button', 'forms-input-button', 'database-input-button']:
             self.query_one(f'#{id}', Button).tooltip = ToolTips[id]
-        self._load_config()
-    def _load_config(self):        
-        self.query_one('#root', LabeledInput).value = config.get('configuration', 'root')
-        self.query_one('#forms', LabeledInput).value = config.get('configuration', 'forms')
-        self.query_one('#database', LabeledInput).value = config.get('configuration', 'database')
     def _select_directory(self, input_id: str, title: str):
         input = self.query_one(f'#{input_id}', LabeledInput).input
         if (result := tkifd.askdirectory(mustexist=True, title=title, initialdir=input.value)):
@@ -149,7 +144,8 @@ class AapaApp(App):
         self.install_screen(TerminalScreen(), name='terminal')
     def callback_run_terminal(self, result: bool):
         logging.debug(f'callbacky {result}')
-        self.terminal_active = False    
+        self.terminal_active = False
+    
     async def activate_terminal(self)->bool:
         logging.debug(f'activate run terminal {self.terminal_active}')
         if self.terminal_active:
@@ -164,6 +160,10 @@ class AapaApp(App):
             case 'scan': await self.action_scan()
             case 'mail': await self.action_mail()
         message.stop()
+    # def on_key(self, event: events.Key) -> None:
+    #     """Write Key events to log."""
+    #     if self.terminal_active:
+    #         self.terminal.write('\n'+ str(event))
     async def action_scan(self):    
         params = self.params
         logging.debug(f'{params=}')
@@ -193,7 +193,7 @@ class AapaApp(App):
     def action_edit_database(self):
         self.query_one(AapaConfiguration).edit_database()
     def action_barbie(self):
-        BARBIE = '#e0218a'
+        BARBIE = '#e0218a' #rgb(224,33,138)
         for widget in self.query():
             widget.styles.background=BARBIE
             widget.styles.color = 'white'
